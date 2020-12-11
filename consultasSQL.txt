@@ -1,0 +1,38 @@
+
+--JOIN TABLE
+SELECT
+	id_producto,
+    p.nombre,
+    m.nombre marca, 
+    sitio_web,
+    c.nombre categoria,
+    garantia,
+    detalles,
+    stock,
+    envio,
+    precio
+FROM
+	productos p
+    JOIN categorias c ON p.id_categoria = c.id_categoria
+    JOIN marcas m ON p.id_marca = m.id_marca
+ORDER BY
+    c.nombre,
+    p.nombre
+');
+
+'''JOIN TABLE ON TABLE_A.ID = TABLE_B.ID'''
+SELECT * FROM TABLE_A as A  (*as es optativo)
+JOIN TABLA_B as B
+    ON A.ID =  B.ID
+JOIN TABLA_C C
+    ON C.ID = A.ID
+
+
+'''INSERT'''
+INSERT INTO TABLA_A (id, nombre, categoria)--SI LE PONEMOS TODOS LOS CAMPOS PODEMOS DEJARLO VACIO--
+VALUES (NULL, 'todo', 'Philips') 
+NB-si son variables con valor strings van entre comillas
+
+
+"""DELETE"""
+DELETE FROM tabla_a WHERE id = 

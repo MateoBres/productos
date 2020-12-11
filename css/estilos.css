@@ -1,0 +1,12 @@
+body {
+    padding-top: 5rem;
+}
+
+img {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+table .celda-foto {
+    background-color: white;
+}
