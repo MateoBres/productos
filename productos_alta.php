@@ -9,7 +9,8 @@ if (!isset($_SESSION['usuario'])) {
 
 
     require_once 'funciones.php';
-    require_once 'config.php';
+    require_once 'clases/Conexion.php';
+
 
     $nombre = '';
     $precio = '';
@@ -30,12 +31,11 @@ if (!isset($_SESSION['usuario'])) {
     if(isset($_GET['id_producto'])){
         $titulo = 'Editar producto';
         $textoBoton = 'Modificar';
-        $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
-        mysqli_set_charset($link, DB_CHARSET);
+        $link = Conexion::conectar();
         $sql =  'SELECT * FROM productos WHERE id_producto = ' . $_GET['id_producto'];
-        $rs = mysqli_query($link, $sql);
-        mysqli_close($link);
-        $producto = mysqli_fetch_assoc($rs);
+        $stmt = $link->prepare($sql);
+        $stmt->execute();
+        $producto = $stmt->fetch(PDO::FETCH_ASSOC);
         $nombre = $producto['nombre'];
         $precio = $producto['precio'];
         $stock = $producto['stock'];
@@ -96,21 +96,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $fotoName = '';
         };
 
-        $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
-        mysqli_set_charset($link, DB_CHARSET);
+        $link = Conexion::conectar();
         if (!isset($_GET['id_producto'])) {
             $sql = "INSERT INTO productos (nombre, id_categoria, id_marca, precio, stock, garantia, detalles, envio, foto)
             VALUES
             ('$nombre', $categoria, $marca, $precio, $stock, $garantia, '$detalles', $envio, '$fotoName')";
-            mysqli_query($link, $sql);
+            $stmt = $link->prepare($sql);
+            $stmt->execute();
             echo getAlert('Producto dado de alta con éxito.', 'success');
         } else {
             $sql = "UPDATE productos SET nombre = '$nombre', id_categoria = $categoria, id_marca = $marca, precio = $precio, stock = $stock, garantia = $garantia , detalles = '$detalles', envio = $envio WHERE id_producto = {$_GET['id_producto']}";
-            mysqli_query($link, $sql);
+            $stmt = $link->prepare($sql);
+            $stmt->execute();
             echo getAlert('Producto modificado con éxito.', 'success');
         }
-        mysqli_close($link);
-        
 
         // Se reinicializan las variables para limpiar el formulario
         $nombre = '';

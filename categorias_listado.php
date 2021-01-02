@@ -10,22 +10,13 @@ if (!isset($_SESSION['usuario'])) {
 
 $titulo = 'Listado de categorias';
 require_once 'encabezado.php';
-require_once 'config.php';
+require_once 'clases/Conexion.php';
 
-$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
-mysqli_set_charset($link, DB_CHARSET);
+$link = Conexion::conectar();
 $sql = 'SELECT * FROM categorias';
-$rs = mysqli_query($link, $sql);
-
-// Check connection
-if (mysqli_connect_errno()) {
-  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-}
-
-mysqli_close($link);
-
-
-$num_filas = mysqli_num_rows($rs);
+$stmt = $link->prepare($sql);
+$stmt->execute();
+$filas = $stmt->fetchAll(PDO::FETCH_ASSOC)
 ?>
 <br>
 <table class="table table-striped col-md-6">
@@ -36,7 +27,9 @@ $num_filas = mysqli_num_rows($rs);
     </tr>
   </thead>
   <?php
-  while ($fila = mysqli_fetch_assoc($rs)) {
+  $num_filas =0;
+  foreach ($filas as $fila) {
+    $num_filas++;
   ?>
     
       <tr>
@@ -51,8 +44,9 @@ $num_filas = mysqli_num_rows($rs);
   }
   ?>
       <tr>
-          <th colspan='2' style='text-align:center;'>Total categorias: <?= $num_filas ?></th>
+          <th colspan='5' style='text-align:center;'>Total marcas: <?= $num_filas ?></th>
       </tr>
+      
   </tbody>
 </table>
   <?php

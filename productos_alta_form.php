@@ -19,13 +19,15 @@
             <select id="categoria" name="categoria" class="form-control">
                 <option value="">Seleccioná una categoría</option>
                 <?php
-                require_once 'config.php';
-                $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
-                mysqli_set_charset($link, DB_CHARSET);
+                require_once 'clases/Conexion.php';
+
+                $link = Conexion::conectar();
                 $sql = 'SELECT * FROM categorias ORDER BY nombre';
-                $rs = mysqli_query($link, $sql);
+                $stmt = $link->prepare($sql);
+                $stmt->execute();
+                $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
-                while ($fila = mysqli_fetch_assoc($rs)) {
+                foreach ($filas as $fila) {
                 ?>
                 <option value="<?= $fila['id_categoria'] ?>" <?php if($marca==$fila['id_categoria']){echo 'selected';}?>><?= $fila['nombre'] ?></option>
 
@@ -39,9 +41,15 @@
             <select id="marca" name="marca" class="form-control">
                 <option value="">Seleccioná una marca</option>
                 <?php
-                $rs = mysqli_query($link, 'SELECT * FROM marcas ORDER BY nombre');
-                mysqli_close($link);
-                while ($fila = mysqli_fetch_assoc($rs)) {
+                require_once 'clases/Conexion.php';
+
+                $link = Conexion::conectar();
+                $sql = 'SELECT * FROM marcas ORDER BY nombre';
+                $stmt = $link->prepare($sql);
+                $stmt->execute();
+                $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                foreach ($filas as $fila) {
                 ?>
                 <option value="<?= $fila['id_marca'] ?>"<?php if($marca==$fila['id_marca']){echo 'selected';}?>><?= $fila['nombre'] ?></option>
                 <?php

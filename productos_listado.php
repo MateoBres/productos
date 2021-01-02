@@ -26,10 +26,9 @@ require_once 'encabezado.php';
     </thead>
     <?php
 
-    require_once 'config.php';
+    require_once 'clases/Conexion.php';
 
-    $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
-    mysqli_set_charset($link, DB_CHARSET);
+    $link = Conexion::conectar();
     
     $sql =  'SELECT
 	id_producto,
@@ -51,18 +50,14 @@ ORDER BY
     c.nombre,
     p.nombre
 ';
-$rs = mysqli_query($link, $sql);
-    // Check connection
-    if (mysqli_connect_errno()) {
-        echo "Failed to connect to MySQL: " . mysqli_connect_error();
-    }
+    $stmt = $link->prepare($sql);
+    $stmt->execute();
+    $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $num_filas =0;
+    foreach ($filas as $fila) {
+        $num_filas++;
 
-    mysqli_close($link);
-
-
-    $num_filas = mysqli_num_rows($rs);
-
-    while ($fila = mysqli_fetch_assoc($rs)) {
         if (!empty($fila['foto'])) {
             $foto = $fila['foto'];
         } else {

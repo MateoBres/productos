@@ -34,14 +34,15 @@ if ($stock === '') {
 
 $categorias_validas = [];
 
-$host = '127.0.0.1';
-$user = 'root';
-$password = '';
-$dataBase = 'proyecto_integrador';
-$link = mysqli_connect($host, $user, $password, $dataBase);
-$rs = mysqli_query($link, 'SELECT * FROM categorias');
-mysqli_close($link);
-while ($fila = mysqli_fetch_assoc($rs)) {
+require_once 'clases/Conexion.php';
+
+$link = Conexion::conectar();
+$sql = 'SELECT * FROM categorias';
+$stmt = $link->prepare($sql);
+$stmt->execute();
+$filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($filas as $fila) {
     array_push($categorias_validas, $fila['id_categoria']);
 }
 
@@ -55,10 +56,15 @@ if ($categoria === '') {
 
 $marcas_validas = [];
 
-$link = mysqli_connect($host, $user, $password, $dataBase);
-$rs = mysqli_query($link, 'SELECT * FROM marcas');
-mysqli_close($link);
-while ($fila = mysqli_fetch_assoc($rs)) {
+require_once 'clases/Conexion.php';
+
+$link = Conexion::conectar();
+$sql = 'SELECT * FROM marcas';
+$stmt = $link->prepare($sql);
+$stmt->execute();
+$filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($filas as $fila) {
     array_push($marcas_validas, $fila['id_marca']);
 }
 if ($marca === '') {
